@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="compile-sources" name="basadi2">
-    
+<project basedir="." default="build" name="basadi2">
+
     <property environment="env"/>
-    <property name="report.dir" value="ant-target/reports"/>
-    <property name="debug.opts" value="source,lines,vars"/>
-    <property name="java.version" value="1.8"/>
-    
+    <property name="junit.output.dir" value="ant-target/reports"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+
     <path id="basadi2.classpath">
         <fileset dir="ant-libs" includes="*.jar"/>
         <pathelement location="ant-target/classes"/>
         <pathelement location="ant-target/test-classes"/>
     </path>
 
-    <target name="cleanup">
+    <target name="clean">
         <delete dir="ant-target/classes"/>
         <delete dir="ant-target/test-classes"/>
         <echo message="Clean up complete."/>
     </target>
 
-    <target name="compile-sources">
+    <target name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
         <mkdir dir="ant-target/classes"/>
-        <javac debug="true" debuglevel="${debug.opts}" destdir="ant-target/classes" source="${java.version}" target="${java.version}" encoding="UTF-8" includeantruntime="false">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes" source="${source}" target="${target}" encoding="UTF-8" includeantruntime="false">
             <src path="src/main/java"/>
             <include name="**/*.java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
     </target>
 
-    <target name="compile-test-code" depends="compile-sources">
+    <target name="build-test" depends="build">
         <mkdir dir="ant-target/test-classes"/>
-        <javac debug="true" debuglevel="${debug.opts}" destdir="ant-target/test-classes" source="${java.version}" target="${java.version}" encoding="UTF-8" includeantruntime="false">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes" source="${source}" target="${target}" encoding="UTF-8" includeantruntime="false">
             <src path="src/test/java"/>
             <include name="**/*.java"/>
             <classpath refid="basadi2.classpath"/>
@@ -39,27 +41,25 @@
         </copy>
     </target>
 
-    <target name="run-tests" depends="compile-test-code">
-        <mkdir dir="${report.dir}"/>
-        <mkdir dir="${report.dir}/html"/>
-        <junit fork="yes" printsummary="yes">
-            <batchtest todir="${report.dir}">
+    <target name="test" depends="build-test">
+        <mkdir dir="${junit.output.dir}"/>
+        <mkdir dir="${junit.output.dir}/html"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <batchtest todir="${junit.output.dir}">
                 <fileset dir="src/test/java">
                     <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
             <classpath refid="basadi2.classpath"/>
         </junit>
+
         <junitreport>
-            <fileset dir="${report.dir}">
+            <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${report.dir}/html"/>
+            <report format="frames" todir="${junit.output.dir}/html"/>
         </junitreport>
-        <echo message="JUnit report generated at: ${report.dir}/html/index.html"/>
-    </target>
-
-    <target name="default-test" depends="run-tests">
-        <echo message="All tests completed successfully!"/>
+        <echo message="JUnit report generated at: ${junit.output.dir}/html/index.html"/>
     </target>
 </project>
