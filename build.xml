@@ -2,25 +2,25 @@
 <project basedir="." default="compile-sources" name="basadi2">
     
     <property environment="env"/>
-    <property name="report.dir" value="output/reports"/>
+    <property name="report.dir" value="ant-target/reports"/>
     <property name="debug.opts" value="source,lines,vars"/>
     <property name="java.version" value="1.8"/>
     
     <path id="basadi2.classpath">
-        <fileset dir="libraries" includes="*.jar"/>
-        <pathelement location="output/classes"/>
-        <pathelement location="output/test-classes"/>
+        <fileset dir="ant-libs" includes="*.jar"/>
+        <pathelement location="ant-target/classes"/>
+        <pathelement location="ant-target/test-classes"/>
     </path>
 
     <target name="cleanup">
-        <delete dir="output/classes"/>
-        <delete dir="output/test-classes"/>
+        <delete dir="ant-target/classes"/>
+        <delete dir="ant-target/test-classes"/>
         <echo message="Clean up complete."/>
     </target>
 
     <target name="compile-sources">
-        <mkdir dir="output/classes"/>
-        <javac debug="true" debuglevel="${debug.opts}" destdir="output/classes" source="${java.version}" target="${java.version}" encoding="UTF-8" includeantruntime="false">
+        <mkdir dir="ant-target/classes"/>
+        <javac debug="true" debuglevel="${debug.opts}" destdir="ant-target/classes" source="${java.version}" target="${java.version}" encoding="UTF-8" includeantruntime="false">
             <src path="src/main/java"/>
             <include name="**/*.java"/>
             <classpath refid="basadi2.classpath"/>
@@ -28,13 +28,13 @@
     </target>
 
     <target name="compile-test-code" depends="compile-sources">
-        <mkdir dir="output/test-classes"/>
-        <javac debug="true" debuglevel="${debug.opts}" destdir="output/test-classes" source="${java.version}" target="${java.version}" encoding="UTF-8" includeantruntime="false">
+        <mkdir dir="ant-target/test-classes"/>
+        <javac debug="true" debuglevel="${debug.opts}" destdir="ant-target/test-classes" source="${java.version}" target="${java.version}" encoding="UTF-8" includeantruntime="false">
             <src path="src/test/java"/>
             <include name="**/*.java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
-        <copy todir="output/test-classes">
+        <copy todir="ant-target/test-classes">
             <fileset dir="src/test/resources"/>
         </copy>
     </target>
@@ -50,7 +50,6 @@
             </batchtest>
             <classpath refid="basadi2.classpath"/>
         </junit>
-        <!-- Generate HTML Reports -->
         <junitreport>
             <fileset dir="${report.dir}">
                 <include name="TEST-*.xml"/>
@@ -59,7 +58,7 @@
         </junitreport>
         <echo message="JUnit report generated at: ${report.dir}/html/index.html"/>
     </target>
-    
+
     <target name="default-test" depends="run-tests">
         <echo message="All tests completed successfully!"/>
     </target>
