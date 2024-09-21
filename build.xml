@@ -15,6 +15,7 @@
 
     <!-- Task for cleaning all files generated from the last Ant build -->
     <target name="clean">
+        <!-- Delete any previously generated test classes, compiled classes, and reports -->
         <delete dir="ant-target/test-classes"/>
         <delete dir="ant-target/classes"/>
         <delete dir="ant-target/reports"/>
@@ -55,7 +56,7 @@
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
                 <fileset dir="src/test/java">
-                    <include name="**/*Test.java"/>
+                    <include name="**/*Test.java"/> <!-- Ensure that the test classes follow *Test.java naming convention -->
                 </fileset>
             </batchtest>
             <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
