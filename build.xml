@@ -5,7 +5,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
-    
+
     <!-- Define the classpath and include all the jar files in the "ant-libs" directory -->
     <path id="basadi2.classpath">
         <fileset dir="ant-libs" includes="*.jar"/>
@@ -17,6 +17,7 @@
     <target name="clean">
         <delete dir="ant-target/test-classes"/>
         <delete dir="ant-target/classes"/>
+        <delete dir="ant-target/reports"/>
     </target>
 
     <!-- Compile all source Java files from src/main/java to ant-target/classes -->
@@ -48,6 +49,8 @@
     <target name="test" depends="build-test">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
+        
+        <!-- Run the JUnit tests and generate XML report -->
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
@@ -57,12 +60,16 @@
             </batchtest>
             <classpath refid="basadi2.classpath"/>
         </junit>
+
+        <!-- Generate the JUnit HTML report under ant-target/reports/html -->
         <junitreport>
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
             </fileset>
             <report format="frames" todir="${junit.output.dir}/html"/>
         </junitreport>
+
+        <!-- Print message showing where the final JUnit report is located -->
         <echo message="Please find the final JUnit test report at: ${junit.output.dir}/html/index.html"/>
     </target>
 </project>
