@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="basadi2">
+<project basedir="." default="test" name="basadi2">
 
     <!-- Properties -->
     <property environment="env"/>
@@ -9,10 +9,9 @@
     <property name="source" value="1.8"/>
 
     <!-- Path declaration including all jar files in "ant-libs" directory -->
-    <path id="huijunl2.classpath">
+    <path id="basadi2.classpath">
         <fileset dir="ant-libs" includes="*.jar"/>
         <pathelement location="ant-target/classes"/>
-        <pathelement location="ant-target/test-classes"/>
     </path>
 
     <!-- Clean target -->
@@ -45,8 +44,20 @@
         </copy>
     </target>
 
+    <!-- Generate Javadoc Documentation -->
+    <target name="javadoc" depends="build">
+        <mkdir dir="ant-target/reports/html"/>
+        <javadoc destdir="ant-target/reports/html" sourcepath="src/main/java"
+                 encoding="UTF-8" classpathref="basadi2.classpath">
+            <doctitle>jsoup API Documentation</doctitle>
+            <use/>
+            <author/>
+            <version/>
+        </javadoc>
+    </target>
+
     <!-- Test target: Execute tests and generate reports -->
-    <target name="test" depends="build-test">
+    <target name="test" depends="build-test,javadoc">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
 
@@ -57,7 +68,10 @@
                     <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
-            <classpath refid="basadi2.classpath"/>
+            <classpath>
+                <path refid="basadi2.classpath"/>
+                <pathelement location="ant-target/test-classes"/>
+            </classpath>
         </junit>
 
         <junitreport>
