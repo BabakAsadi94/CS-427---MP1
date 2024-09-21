@@ -1,81 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="clean-build-test" name="basadi2">
+<project basedir="." default="build" name="basadi2">
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
 
-    <!-- Define the classpath and include all the jar files in the "ant-libs" directory -->
-    <path id="basadi2.classpath">
-        <fileset dir="ant-libs" includes="*.jar"/> <!-- Relative path for jar files -->
-        <pathelement location="ant-target/test-classes"/> <!-- Ensure test-classes are in classpath -->
-        <pathelement location="ant-target/classes"/> <!-- Ensure compiled classes are in classpath -->
+    <!-- Path declaration including all jar files in "ant-libs" directory -->
+    <path id="huijunl2.classpath">
+        <fileset dir="ant-libs" includes="*.jar"/>
+        <pathelement location="ant-target/test-classes"/>
+        <pathelement location="ant-target/classes"/>
     </path>
 
-    <!-- Task for cleaning all files generated from the last Ant build -->
+    <!-- Clean target -->
     <target name="clean">
-        <!-- Delete any previously generated test classes, compiled classes, and reports -->
         <delete dir="ant-target/test-classes"/>
         <delete dir="ant-target/classes"/>
-        <delete dir="ant-target/reports"/>
     </target>
 
-    <!-- Compile all source Java files from src/main/java to ant-target/classes -->
-    <target name="build" depends="clean">
-        <echo message="${ant.project.name}: ${ant.file}"/>
+    <!-- Build target: Compile source Java files -->
+    <target name="build">
         <mkdir dir="ant-target/classes"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes"
+               includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
             <src path="src/main/java"/>
-            <include name="**/*.java"/>
-            <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
+            <classpath refid="basadi2.classpath"/>
         </javac>
     </target>
 
-    <!-- Compile all test Java files from src/test/java to ant-target/test-classes -->
+    <!-- Build-test target: Compile test Java files and copy resources -->
     <target name="build-test" depends="build">
         <mkdir dir="ant-target/test-classes"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes"
+               includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
             <src path="src/test/java"/>
-            <include name="**/*.java"/>
-            <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
+            <classpath refid="basadi2.classpath"/>
         </javac>
-        <!-- Copy all test resource files from src/test/resources to ant-target/test-classes -->
         <copy todir="ant-target/test-classes">
             <fileset dir="src/test/resources"/>
         </copy>
     </target>
 
-    <!-- Define the actual test execution target -->
+    <!-- Test target: Execute tests and generate reports -->
     <target name="test" depends="build-test">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
-        
-        <!-- Run the JUnit tests and generate XML report -->
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
                 <fileset dir="src/test/java">
-                    <include name="**/*Test.java"/> <!-- Ensure that the test classes follow *Test.java naming convention -->
+                    <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
-            <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
+            <classpath refid="basadi2.classpath"/>
         </junit>
-
-        <!-- Generate the JUnit HTML report under ant-target/reports/html -->
         <junitreport>
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
             </fileset>
             <report format="frames" todir="${junit.output.dir}/html"/>
         </junitreport>
-
-        <!-- Print message showing where the final JUnit test report is located -->
-        <echo message="Please find the final JUnit test report at: ${junit.output.dir}/html/index.html"/>
-    </target>
-
-    <!-- A composite target to clean, build, compile tests, and run tests -->
-    <target name="clean-build-test" depends="test">
-        <echo message="Cleaned, built, and tested successfully."/>
     </target>
 </project>
