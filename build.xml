@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="huijunl2">
+<project basedir="." default="build" name="basadi2">
+
+    <!-- Properties -->
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
     <property name="debuglevel" value="source,lines,vars"/>
@@ -9,11 +11,15 @@
     <!-- Path declaration including all jar files in "ant-libs" directory -->
     <path id="huijunl2.classpath">
         <fileset dir="ant-libs" includes="*.jar"/>
+        <pathelement location="ant-target/classes"/>
+        <pathelement location="ant-target/test-classes"/>
     </path>
 
     <!-- Clean target -->
     <target name="clean">
-        <delete dir="ant-target"/>
+        <delete dir="ant-target/test-classes"/>
+        <delete dir="ant-target/classes"/>
+        <delete dir="${junit.output.dir}"/>
     </target>
 
     <!-- Build target: Compile source Java files -->
@@ -22,7 +28,7 @@
         <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes"
                includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
             <src path="src/main/java"/>
-            <classpath refid="huijunl2.classpath"/>
+            <classpath refid="basadi2.classpath"/>
         </javac>
     </target>
 
@@ -32,32 +38,18 @@
         <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes"
                includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
             <src path="src/test/java"/>
-            <classpath>
-                <path refid="huijunl2.classpath"/>
-                <pathelement location="ant-target/classes"/>
-            </classpath>
+            <classpath refid="basadi2.classpath"/>
         </javac>
         <copy todir="ant-target/test-classes">
             <fileset dir="src/test/resources"/>
         </copy>
     </target>
 
-    <!-- Generate Javadoc Documentation -->
-    <target name="javadoc" depends="build">
-        <mkdir dir="ant-target/reports/html"/>
-        <javadoc destdir="ant-target/reports/html" sourcepath="src/main/java"
-                 encoding="UTF-8" classpathref="huijunl2.classpath" packagenames="org.jsoup.**">
-            <doctitle>jsoup API Documentation</doctitle>
-            <use/>
-            <author/>
-            <version/>
-            <classpath refid="huijunl2.classpath"/>
-        </javadoc>
-    </target>
-
     <!-- Test target: Execute tests and generate reports -->
-    <target name="test" depends="build-test,javadoc">
+    <target name="test" depends="build-test">
         <mkdir dir="${junit.output.dir}"/>
+        <mkdir dir="${junit.output.dir}/html"/>
+
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
@@ -65,12 +57,9 @@
                     <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
-            <classpath>
-                <path refid="huijunl2.classpath"/>
-                <pathelement location="ant-target/classes"/>
-                <pathelement location="ant-target/test-classes"/>
-            </classpath>
+            <classpath refid="basadi2.classpath"/>
         </junit>
+
         <junitreport>
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
@@ -78,4 +67,5 @@
             <report format="frames" todir="${junit.output.dir}/html"/>
         </junitreport>
     </target>
+
 </project>
