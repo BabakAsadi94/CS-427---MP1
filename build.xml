@@ -11,6 +11,7 @@
     <!-- Path declaration including all jar files in "ant-libs" directory -->
     <path id="basadi2.classpath">
         <fileset dir="ant-libs" includes="*.jar"/>
+        <pathelement location="ant-target/test-classes"/>
         <pathelement location="ant-target/classes"/>
     </path>
 
