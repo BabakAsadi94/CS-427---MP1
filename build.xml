@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="basadi2">
 
+    <!-- Set properties for environment, output directories, and Java version -->
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
-    
+
+    <!-- Set the classpath to include the necessary JAR files from ant-libs -->
     <path id="basadi2.classpath">
         <fileset dir="ant-libs" includes="*.jar"/>
         <pathelement location="ant-target/test-classes"/>
         <pathelement location="ant-target/classes"/>
     </path>
 
-    <!-- Clean up task -->
+    <!-- Clean up task to delete the previous build files -->
     <target name="clean">
         <delete dir="ant-target/test-classes"/>
         <delete dir="ant-target/classes"/>
@@ -22,7 +24,7 @@
         <echo message="Clean up complete."/>
     </target>
 
-    <!-- Compile source Java files -->
+    <!-- Compile all source Java files from src/main/java to ant-target/classes -->
     <target name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <mkdir dir="ant-target/classes"/>
@@ -33,7 +35,7 @@
         </javac>
     </target>
 
-    <!-- Compile test Java files and copy test resources -->
+    <!-- Compile all test Java files from src/test/java to ant-target/test-classes -->
     <target name="build-test" depends="build">
         <mkdir dir="ant-target/test-classes"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
@@ -41,18 +43,19 @@
             <include name="**/*.java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
+        <!-- Copy all test resource files from src/test/resources to ant-target/test-classes -->
         <copy todir="ant-target/test-classes">
             <fileset dir="src/test/resources"/>
         </copy>
     </target>
 
-    <!-- JUnit test execution target -->
+    <!-- Run the JUnit tests and generate the JUnit report in ant-target/reports/html -->
     <target name="test" depends="build-test">
-        <mkdir dir="${junit.output.dir}"/>
-        <mkdir dir="${junit.output.dir}/html"/>
+        <mkdir dir="ant-target/reports"/>
+        <mkdir dir="ant-target/reports/html"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <batchtest todir="${junit.output.dir}">
+            <batchtest todir="ant-target/reports">
                 <fileset dir="src/test/java">
                     <include name="**/*Test.java"/>
                 </fileset>
@@ -60,15 +63,15 @@
             <classpath refid="basadi2.classpath"/>
         </junit>
         <junitreport>
-            <fileset dir="${junit.output.dir}">
+            <fileset dir="ant-target/reports">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${junit.output.dir}/html"/>
+            <report format="frames" todir="ant-target/reports/html"/>
         </junitreport>
-        <echo message="JUnit report generated at: ${junit.output.dir}/html/index.html"/>
+        <echo message="JUnit report generated at: ant-target/reports/html/index.html"/>
     </target>
 
-    <!-- Generate Javadoc documentation -->
+    <!-- Generate Javadoc documentation in ant-target/reports/html -->
     <target name="javadoc" depends="build">
         <mkdir dir="ant-target/reports/html"/>
         <javadoc destdir="ant-target/reports/html" sourcepath="src/main/java" classpathref="basadi2.classpath" encoding="UTF-8">
@@ -81,8 +84,8 @@
         <echo message="Javadoc generated at: ant-target/reports/html/overview-summary.html"/>
     </target>
 
-    <!-- Default target for testing and documentation generation -->
-    <target name="default" depends="test, javadoc">
+    <!-- Default target to clean, build, run tests, and generate Javadoc -->
+    <target name="default" depends="clean, test, javadoc">
         <echo message="Build, test, and Javadoc generation complete."/>
     </target>
 
