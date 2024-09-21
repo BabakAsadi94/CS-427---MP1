@@ -81,4 +81,9 @@
         <echo message="Javadoc generated at: ant-target/reports/html/overview-summary.html"/>
     </target>
 
+    <!-- Default target for testing and documentation generation -->
+    <target name="default" depends="test, javadoc">
+        <echo message="Build, test, and Javadoc generation complete."/>
+    </target>
+
 </project>
