@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="basadi2">
+<project basedir="." default="clean-build-test" name="basadi2">
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
     <property name="debuglevel" value="source,lines,vars"/>
@@ -21,7 +21,7 @@
     </target>
 
     <!-- Compile all source Java files from src/main/java to ant-target/classes -->
-    <target name="build">
+    <target name="build" depends="clean">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <mkdir dir="ant-target/classes"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
@@ -69,7 +69,12 @@
             <report format="frames" todir="${junit.output.dir}/html"/>
         </junitreport>
 
-        <!-- Print message showing where the final JUnit report is located -->
+        <!-- Print message showing where the final JUnit test report is located -->
         <echo message="Please find the final JUnit test report at: ${junit.output.dir}/html/index.html"/>
+    </target>
+
+    <!-- A composite target to clean, build, compile tests, and run tests -->
+    <target name="clean-build-test" depends="test">
+        <echo message="Cleaned, built, and tested successfully."/>
     </target>
 </project>
