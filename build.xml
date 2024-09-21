@@ -8,9 +8,9 @@
 
     <!-- Define the classpath and include all the jar files in the "ant-libs" directory -->
     <path id="basadi2.classpath">
-        <fileset dir="ant-libs" includes="*.jar"/>
-        <pathelement location="ant-target/test-classes"/>
-        <pathelement location="ant-target/classes"/>
+        <fileset dir="ant-libs" includes="*.jar"/> <!-- Relative path for jar files -->
+        <pathelement location="ant-target/test-classes"/> <!-- Ensure test-classes are in classpath -->
+        <pathelement location="ant-target/classes"/> <!-- Ensure compiled classes are in classpath -->
     </path>
 
     <!-- Task for cleaning all files generated from the last Ant build -->
@@ -27,7 +27,7 @@
         <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
             <src path="src/main/java"/>
             <include name="**/*.java"/>
-            <classpath refid="basadi2.classpath"/>
+            <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
         </javac>
     </target>
 
@@ -37,7 +37,7 @@
         <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
             <src path="src/test/java"/>
             <include name="**/*.java"/>
-            <classpath refid="basadi2.classpath"/>
+            <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
         </javac>
         <!-- Copy all test resource files from src/test/resources to ant-target/test-classes -->
         <copy todir="ant-target/test-classes">
@@ -58,7 +58,7 @@
                     <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
-            <classpath refid="basadi2.classpath"/>
+            <classpath refid="basadi2.classpath"/> <!-- Classpath includes jars from "ant-libs" -->
         </junit>
 
         <!-- Generate the JUnit HTML report under ant-target/reports/html -->
