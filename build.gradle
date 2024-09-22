@@ -27,6 +27,25 @@ dependencies {
     testImplementation fileTree(dir: 'ant-libs', include: ['*.jar'])
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+
 tasks.withType(JavaCompile) {
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -34,6 +53,9 @@ tasks.withType(JavaCompile) {
 }
 
 test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
     reports {
         html {
             enabled = true
