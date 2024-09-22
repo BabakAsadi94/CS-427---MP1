@@ -8,6 +8,9 @@ repositories {
     mavenCentral()
 }
 
+// Set the build directory to 'gradle-target'
+buildDir = 'gradle-target'
+
 dependencies {
     // Use the same dependency versions specified in the Maven build file
     testImplementation 'junit:junit:4.12'
@@ -21,7 +24,7 @@ sourceSets {
     main {
         java {
             srcDirs = ['src/main/java']
-            destinationDirectory = file('gradle-target/classes')
+            // Destination directory is automatically set to '$buildDir/classes/java/main'
         }
         resources {
             srcDirs = ['src/main/resources']
@@ -30,7 +33,7 @@ sourceSets {
     test {
         java {
             srcDirs = ['src/test/java']
-            destinationDirectory = file('gradle-target/test-classes')
+            // Destination directory is automatically set to '$buildDir/classes/java/test'
         }
         resources {
             srcDirs = ['src/test/resources']
@@ -40,8 +43,14 @@ sourceSets {
 
 test {
     reports {
-        html.destination = file('gradle-target/reports')
-        junitXml.destination = file('gradle-target/test-results')
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/tests/test")
+        }
+        junitXml {
+            enabled = true
+            destination = file("$buildDir/test-results/test")
+        }
     }
 }
 
@@ -52,5 +61,5 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-    destinationDirectory = file('gradle-target/libs')
+    destinationDirectory = file("$buildDir/libs")
 }
