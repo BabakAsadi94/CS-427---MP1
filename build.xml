@@ -12,9 +12,7 @@
         <pathelement location="ant-target/test-classes"/>
         <pathelement location="ant-target/classes"/>
         <!-- Include all JARs in ant-libs -->
-        <fileset dir="ant-libs">
-            <include name="**/*.jar"/>
-        </fileset>
+        <pathelement path="ant-libs/*"/>
     </path>
 
     <!-- Clean Target -->
@@ -43,7 +41,7 @@
             <classpath refid="basadi2.classpath"/>
         </javac>
         <!-- Copy test resources -->
-        <copy todir="ant-target/test-classes" flatten="false">
+        <copy todir="ant-target/test-classes">
             <fileset dir="src/test/resources"/>
         </copy>
     </target>
