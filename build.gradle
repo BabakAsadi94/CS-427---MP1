@@ -1,15 +1,10 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
 
 description = 'basadi2'
 
 repositories {
     mavenCentral()
 }
-
-// Set the build directory to 'gradle-target'
-buildDir = 'gradle-target'
 
 dependencies {
     // Include all dependencies specified in the Maven pom.xml
@@ -23,46 +18,28 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-servlet:9.2.28.v20190418'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-            // Destination directory is automatically set to '$buildDir/classes/java/main'
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['src/test/java']
-            // Destination directory is automatically set to '$buildDir/classes/java/test'
-        }
-        resources {
-            srcDirs = ['src/test/resources']
-        }
-    }
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 test {
     reports {
         html {
             enabled = true
-            destination = file("$buildDir/reports/tests/test")
+            destination = file('gradle-target/reports/tests/test')
         }
         junitXml {
             enabled = true
-            destination = file("$buildDir/test-results/test")
+            destination = file('gradle-target/test-results/test')
         }
     }
 }
 
-tasks.withType(JavaCompile) {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-    options.encoding = 'UTF-8'
+jar {
+    destinationDirectory = file('gradle-target/libs')
 }
 
-jar {
-    destinationDirectory = file("$buildDir/libs")
-}
+buildDir = 'gradle-target'
