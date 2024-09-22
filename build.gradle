@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-description = 'YourNetID' // Replace 'YourNetID' with your actual NetID
+description = 'basadi2' // Replace 'YourNetID' with your actual NetID
 
 repositories {
     mavenCentral()
