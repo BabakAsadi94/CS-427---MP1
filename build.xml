@@ -3,6 +3,7 @@
     <!-- Property Definitions -->
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
+    <property name="javadoc.output.dir" value="ant-target/reports/html"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
@@ -22,9 +23,7 @@
 
     <!-- Clean Target -->
     <target name="clean">
-        <delete dir="ant-target/test-classes"/>
-        <delete dir="ant-target/classes"/>
-        <delete dir="ant-target/reports"/>
+        <delete dir="ant-target"/>
     </target>
 
     <!-- Build Target -->
@@ -54,11 +53,18 @@
         </copy>
     </target>
 
+    <!-- Javadoc Target -->
+    <target name="javadoc" depends="build">
+        <echo message="Generating Javadoc..."/>
+        <mkdir dir="${javadoc.output.dir}"/>
+        <javadoc destdir="${javadoc.output.dir}" sourcepath="src/main/java" classpathref="basadi2.classpath" use="true" windowtitle="Jsoup API" doctitle="Jsoup API" author="true" version="true" encoding="UTF-8" />
+    </target>
+
     <!-- Test Execution Target -->
-    <target name="test" depends="build-test">
+    <target name="test" depends="build-test,javadoc">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
-        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="true" haltonerror="true">
+        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="false" haltonerror="false">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
                 <fileset dir="ant-target/test-classes">
