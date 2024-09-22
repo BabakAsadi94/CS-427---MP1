@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="test" name="basadi2">
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
-    
+
+    <!-- Define the classpath -->
     <path id="basadi2.classpath">
         <!-- Include compiled classes -->
         <pathelement location="ant-target/classes"/>
         <pathelement location="ant-target/test-classes"/>
-        <!-- Include all JARs in ant-libs except jsoup.jar -->
+        <!-- Include all JARs in ant-libs -->
         <fileset dir="ant-libs">
             <include name="**/*.jar"/>
-            <exclude name="jsoup*.jar"/>
         </fileset>
     </path>
 
@@ -47,20 +47,8 @@
         </copy>
     </target>
 
-    <!-- Javadoc Target -->
-    <target name="javadoc" depends="build">
-        <echo message="Generating Javadoc..."/>
-        <mkdir dir="ant-target/reports/html"/>
-        <javadoc destdir="ant-target/reports/html" sourcepath="src/main/java"
-            classpathref="basadi2.classpath" encoding="UTF-8"
-            use="true" windowtitle="Jsoup API" doctitle="Jsoup API" author="true" version="true"
-            failonerror="true" verbose="true">
-            <include name="**/*.java"/>
-        </javadoc>
-    </target>
-
     <!-- Test Target -->
-    <target name="test" depends="build-test,javadoc">
+    <target name="test" depends="build-test">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
         <junit fork="yes" printsummary="withOutAndErr">
