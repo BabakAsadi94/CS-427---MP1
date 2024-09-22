@@ -2,7 +2,6 @@
 <project basedir="." default="test" name="jsoup">
     <!-- Property Definitions -->
     <property name="junit.output.dir" value="ant-target/reports"/>
-    <property name="javadoc.output.dir" value="ant-target/reports/html"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
@@ -12,7 +11,9 @@
         <pathelement location="ant-target/test-classes"/>
         <pathelement location="ant-target/classes"/>
         <!-- Include all JARs in ant-libs -->
-        <pathelement path="ant-libs/*"/>
+        <fileset dir="ant-libs">
+            <include name="**/*.jar"/>
+        </fileset>
     </path>
 
     <!-- Clean Target -->
@@ -46,22 +47,12 @@
         </copy>
     </target>
 
-    <!-- Javadoc Target -->
-    <target name="javadoc" depends="build">
-        <echo message="Generating Javadoc..."/>
-        <mkdir dir="${javadoc.output.dir}"/>
-        <javadoc destdir="${javadoc.output.dir}" sourcepath="src/main/java"
-            classpathref="basadi2.classpath" use="true" windowtitle="Jsoup API"
-            doctitle="Jsoup API" author="true" version="true" encoding="UTF-8"
-            failonerror="true" verbose="true"/>
-    </target>
-
     <!-- Test Execution Target -->
-    <target name="test" depends="build-test,javadoc">
+    <target name="test" depends="build-test">
         <echo message="Running tests..."/>
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
-        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="false" haltonerror="false">
+        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="no" haltonerror="no">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
                 <fileset dir="ant-target/test-classes">
