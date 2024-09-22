@@ -14,8 +14,7 @@
 
     <!-- Task for cleaning all files generated from last Ant build -->
     <target name="clean">
-        <delete dir="ant-target/test-classes"/>
-        <delete dir="ant-target/classes"/>
+        <delete dir="ant-target"/>
     </target>
 
     <!-- Compile all source Java files from src/main/java to ant-target/classes -->
@@ -43,24 +42,34 @@
         </copy>
     </target>
 
+    <!-- Generate JavaDoc to ant-target/reports/html/ -->
+    <target name="javadoc" depends="build">
+        <mkdir dir="ant-target/reports/html/"/>
+        <javadoc destdir="ant-target/reports/html/" sourcepath="src/main/java" encoding="UTF-8" classpathref="YourNetID.classpath" use="true" windowtitle="API Documentation" doctitle="API Documentation">
+            <packageset dir="src/main/java">
+                <include name="**/*"/>
+            </packageset>
+        </javadoc>
+    </target>
+
     <!-- Run all the tests and store the JUnit report in the ant-target/reports/html directory -->
-    <target name="test" depends="build-test">
+    <target name="test" depends="build-test,javadoc">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
-                <fileset dir="src/test/java">
-                    <include name="**/*Test.java"/>
+                <fileset dir="ant-target/test-classes">
+                    <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
             <classpath refid="basadi2.classpath"/>
         </junit>
-        <junitreport>
+        <junitreport todir="${junit.output.dir}/html">
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${junit.output.dir}/html"/>
+            <report format="noframes"/>
         </junitreport>
         <echo message="Please find the final JUnit test report at: ${junit.output.dir}/html/index.html"/>
     </target>
