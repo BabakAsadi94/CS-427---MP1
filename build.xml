@@ -5,7 +5,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
-    <path id="YourNetID.classpath">
+    <path id="basadi2.classpath">
         <!-- Include all jar files in the "ant-libs" directory -->
         <fileset dir="ant-libs" includes="*.jar"/>
         <pathelement location="ant-target/test-classes"/>
@@ -45,7 +45,7 @@
     <!-- Generate JavaDoc to ant-target/reports/html/ -->
     <target name="javadoc" depends="build">
         <mkdir dir="ant-target/reports/html/"/>
-        <javadoc destdir="ant-target/reports/html/" sourcepath="src/main/java" encoding="UTF-8" classpathref="YourNetID.classpath" use="true" windowtitle="API Documentation" doctitle="API Documentation">
+        <javadoc destdir="ant-target/reports/html/" sourcepath="src/main/java" encoding="UTF-8" classpathref="basadi2.classpath" use="true" windowtitle="API Documentation" doctitle="API Documentation">
             <packageset dir="src/main/java">
                 <include name="**/*"/>
             </packageset>
