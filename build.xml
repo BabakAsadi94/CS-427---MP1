@@ -12,7 +12,9 @@
         <pathelement location="ant-target/test-classes"/>
         <pathelement location="ant-target/classes"/>
         <!-- Include all JARs in ant-libs -->
-        <pathelement path="ant-libs/*"/>
+        <fileset dir="ant-libs">
+            <include name="**/*.jar"/>
+        </fileset>
     </path>
 
     <!-- Clean Target -->
@@ -50,9 +52,10 @@
     <target name="javadoc" depends="build">
         <echo message="Generating Javadoc..."/>
         <mkdir dir="${javadoc.output.dir}"/>
-        <javadoc destdir="${javadoc.output.dir}" sourcepath="src/main/java" 
-                 classpathref="basadi2.classpath" use="true" windowtitle="Jsoup API"
-                 doctitle="Jsoup API" author="true" version="true" encoding="UTF-8" />
+        <javadoc destdir="${javadoc.output.dir}" sourcepath="src/main/java"
+            classpathref="basadi2.classpath" use="true" windowtitle="Jsoup API"
+            doctitle="Jsoup API" author="true" version="true" encoding="UTF-8"
+            failonerror="true" verbose="true"/>
     </target>
 
     <!-- Test Execution Target -->
@@ -75,6 +78,6 @@
             </fileset>
             <report format="frames" todir="${junit.output.dir}/html"/>
         </junitreport>
-        <echo message="Please find the final JUnit test report at: ${junit.output.dir}/html/index.html"/>
+        <echo message="JUnit test report is available at: ${junit.output.dir}/html/index.html"/>
     </target>
 </project>
