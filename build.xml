@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="basadi2">
+<project basedir="." default="test" name="basadi2">
     <property environment="env"/>
     <property name="junit.output.dir" value="ant-target/reports"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
-
+    
     <path id="basadi2.classpath">
-        <!-- Include all jar files in the "ant-libs" directory -->
-        <fileset dir="ant-libs" includes="*.jar"/>
-        <pathelement location="ant-target/test-classes"/>
+        <!-- Include compiled classes -->
         <pathelement location="ant-target/classes"/>
+        <pathelement location="ant-target/test-classes"/>
+        <!-- Include all JARs in ant-libs except jsoup.jar -->
+        <fileset dir="ant-libs">
+            <include name="**/*.jar"/>
+            <exclude name="jsoup*.jar"/>
+        </fileset>
     </path>
 
-    <!-- Task for cleaning all files generated from last Ant build -->
+    <!-- Clean Target -->
     <target name="clean">
         <delete dir="ant-target"/>
     </target>
 
-    <!-- Compile all source Java files from src/main/java to ant-target/classes -->
+    <!-- Build Target -->
     <target name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <mkdir dir="ant-target/classes"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+        <javac encoding="UTF-8" debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes"
+            includeantruntime="false" source="${source}" target="${target}">
             <src path="src/main/java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
     </target>
 
-    <!-- Compile all test Java files from src/test/java to ant-target/test-classes -->
+    <!-- Build-Test Target -->
     <target name="build-test" depends="build">
         <mkdir dir="ant-target/test-classes"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+        <javac encoding="UTF-8" debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes"
+            includeantruntime="false" source="${source}" target="${target}">
             <src path="src/test/java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
-        <!-- Copy all test resource files from src/test/resources to ant-target/test-classes -->
+        <!-- Copy test resources -->
         <copy todir="ant-target/test-classes">
             <fileset dir="src/test/resources"/>
         </copy>
@@ -43,14 +49,17 @@
 
     <!-- Javadoc Target -->
     <target name="javadoc" depends="build">
-        <mkdir dir="${junit.output.dir}/html"/>
-        <javadoc destdir="${junit.output.dir}/html" sourcepath="src/main/java"
-            classpathref="basadi2.classpath" encoding="UTF-8">
+        <echo message="Generating Javadoc..."/>
+        <mkdir dir="ant-target/reports/html"/>
+        <javadoc destdir="ant-target/reports/html" sourcepath="src/main/java"
+            classpathref="basadi2.classpath" encoding="UTF-8"
+            use="true" windowtitle="Jsoup API" doctitle="Jsoup API" author="true" version="true"
+            failonerror="true" verbose="true">
             <include name="**/*.java"/>
         </javadoc>
     </target>
 
-    <!-- Define the actual test execution target -->
+    <!-- Test Target -->
     <target name="test" depends="build-test,javadoc">
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
