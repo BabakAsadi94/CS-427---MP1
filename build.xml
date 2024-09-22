@@ -25,8 +25,8 @@
     <target name="build">
         <echo message="Building source files..."/>
         <mkdir dir="ant-target/classes"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes"
-            includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+        <javac encoding="UTF-8" debug="true" debuglevel="${debuglevel}" destdir="ant-target/classes"
+            includeantruntime="false" source="${source}" target="${target}">
             <src path="src/main/java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
@@ -36,8 +36,8 @@
     <target name="build-test" depends="build">
         <echo message="Building test files..."/>
         <mkdir dir="ant-target/test-classes"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes"
-            includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+        <javac encoding="UTF-8" debug="true" debuglevel="${debuglevel}" destdir="ant-target/test-classes"
+            includeantruntime="false" source="${source}" target="${target}">
             <src path="src/test/java"/>
             <classpath refid="basadi2.classpath"/>
         </javac>
@@ -47,12 +47,23 @@
         </copy>
     </target>
 
+    <!-- Javadoc Target -->
+    <target name="javadoc" depends="build">
+        <echo message="Generating Javadoc..."/>
+        <mkdir dir="ant-target/reports/html"/>
+        <javadoc destdir="ant-target/reports/html" sourcepath="src/main/java"
+            classpathref="basadi2.classpath" encoding="UTF-8"
+            use="true" windowtitle="Jsoup API" doctitle="Jsoup API" author="true" version="true">
+            <include name="**/*.java"/>
+        </javadoc>
+    </target>
+
     <!-- Test Execution Target -->
-    <target name="test" depends="build-test">
+    <target name="test" depends="build-test,javadoc">
         <echo message="Running tests..."/>
         <mkdir dir="${junit.output.dir}"/>
         <mkdir dir="${junit.output.dir}/html"/>
-        <junit fork="yes" printsummary="withOutAndErr" haltonfailure="no" haltonerror="no">
+        <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <batchtest todir="${junit.output.dir}">
                 <fileset dir="ant-target/test-classes">
@@ -61,11 +72,11 @@
             </batchtest>
             <classpath refid="basadi2.classpath"/>
         </junit>
-        <junitreport>
+        <junitreport todir="${junit.output.dir}/html">
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
             </fileset>
-            <report format="frames" todir="${junit.output.dir}/html"/>
+            <report format="noframes"/>
         </junitreport>
         <echo message="JUnit test report is available at: ${junit.output.dir}/html/index.html"/>
     </target>
