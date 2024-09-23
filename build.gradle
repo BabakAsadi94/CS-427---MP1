@@ -9,49 +9,26 @@ repositories {
 }
 
 dependencies {
-    implementation 'ant-libs/gson-2.7.jar'
-    implementation 'ant-libs/hamcrest-core-1.3.jar'
-    implementation 'ant-libs/javax.servlet-api-3.1.0.jar'
-    implementation 'ant-libs/jetty-http-9.2.28.v20190418.jar'
-    implementation 'ant-libs/jetty-io-9.2.28.v20190418.jar'
-    implementation 'ant-libs/jetty-security-9.2.28.v20190418.jar'
-    implementation 'ant-libs/jetty-server-9.2.28.v20190418.jar'
-    implementation 'ant-libs/jetty-servlet-9.2.28.v20190418.jar'
-	implementation 'ant-libs/jetty-util-9.2.28.v20190418.jar'
+    implementation files('ant-libs/gson-2.7.jar')
+    implementation files('ant-libs/hamcrest-core-1.3.jar')
+    implementation files('ant-libs/javax.servlet-api-3.1.0.jar')
+    implementation files('ant-libs/jetty-http-9.2.28.v20190418.jar')
+    implementation files('ant-libs/jetty-io-9.2.28.v20190418.jar')
+    implementation files('ant-libs/jetty-security-9.2.28.v20190418.jar')
+    implementation files('ant-libs/jetty-server-9.2.28.v20190418.jar')
+    implementation files('ant-libs/jetty-servlet-9.2.28.v20190418.jar')
+    implementation files('ant-libs/jetty-util-9.2.28.v20190418.jar')
     testImplementation 'junit:junit:4.12'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-            destinationDirectory = file('gradle-target/classes')
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['src/test/java']
-            destinationDirectory = file('gradle-target/test-classes')
-        }
-        resources {
-            srcDirs = ['src/test/resources']
-        }
-    }
+tasks.withType(JavaCompile) {
+    destinationDir = file('gradle-target/classes')
 }
 
 test {
     reports {
-        html {
-            enabled = true
-            destination = file('gradle-target/reports/tests/test')
-        }
-        junitXml {
-            enabled = true
-            destination = file('gradle-target/test-results')
-        }
+        html.destination = file('gradle-target/reports/tests/test')
+        junitXml.destination = file('gradle-target/test-results')
     }
 }
 
