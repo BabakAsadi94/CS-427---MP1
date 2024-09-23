@@ -5,7 +5,7 @@ plugins {
     id 'java'
 }
 
-description = 'basadi2'  // Your NetID as per the instruction
+description = 'basadi2'  // Your NetID
 
 repositories {
     mavenCentral()
@@ -20,36 +20,15 @@ dependencies {
     testImplementation 'junit:junit:4.8.1'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-            destinationDirectory = file("$buildDir/classes")  // Store compiled main classes in gradle-target
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['src/test/java']
-            destinationDirectory = file("$buildDir/test-classes")  // Store compiled test classes in gradle-target
-        }
-        resources {
-            srcDirs = ['src/test/resources']
-        }
-    }
-}
-
 test {
     reports {
         html {
             enabled = true
-            destination = file("$buildDir/reports/tests/test")  // Store HTML test report in gradle-target
+            destination = file("$buildDir/reports/tests/test")  // Ensure test report is in the correct directory
         }
         junitXml {
             enabled = true
-            destination = file("$buildDir/test-results")  // Store JUnit XML report in gradle-target
+            destination = file("$buildDir/test-results")  // Ensure JUnit XML report is in the correct directory
         }
     }
 }
