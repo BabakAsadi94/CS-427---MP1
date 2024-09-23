@@ -15,38 +15,48 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-servlet:9.2.28.v20190418'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-            destinationDirectory = file('gradle-target/classes')
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['src/test/java']
-            destinationDirectory = file('gradle-target/test-classes')
-        }
-        resources {
-            srcDirs = ['src/test/resources']
-        }
-    }
+// Remove this block, as Gradle can automatically detect these directories
+// sourceSets {
+//     main {
+//         java {
+//             srcDirs = ['src/main/java']
+//             destinationDirectory = file('gradle-target/classes')
+//         }
+//         resources {
+//             srcDirs = ['src/main/resources']
+//         }
+//     }
+//     test {
+//         java {
+//             srcDirs = ['src/test/java']
+//             destinationDirectory = file('gradle-target/test-classes')
+//         }
+//         resources {
+//             srcDirs = ['src/test/resources']
+//         }
+//     }
+// }
+
+tasks.withType(JavaCompile) {
+    destinationDir = file('gradle-target/classes')  // Specify where to output compiled class files
+}
+
+processResources {
+    destinationDir = file('gradle-target/resources')  // Specify where to output resources
 }
 
 test {
     reports {
         html {
             enabled = true
-            destination = file('gradle-target/reports/tests/test')
+            destination = file('gradle-target/reports/tests/test')  // Test HTML report location
         }
         junitXml {
             enabled = true
-            destination = file('gradle-target/test-results')
+            destination = file('gradle-target/test-results')  // JUnit XML report location
         }
     }
+    testClassesDirs = files('gradle-target/test-classes')  // Test classes directory
 }
 
 compileJava {
