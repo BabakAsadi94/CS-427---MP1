@@ -1,1 +1,64 @@
+plugins {
+    id 'java'
+}
 
+description = 'basadi2'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.google.code.gson:gson:2.7'
+    testImplementation 'org.eclipse.jetty:jetty-server:9.2.28.v20190418'
+    testImplementation 'org.eclipse.jetty:jetty-servlet:9.2.28.v20190418'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+            destinationDirectory = file('gradle-target/classes')
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+            destinationDirectory = file('gradle-target/test-classes')
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+
+test {
+    reports {
+        html {
+            enabled = true
+            destination = file('gradle-target/reports/tests/test')
+        }
+        junitXml {
+            enabled = true
+            destination = file('gradle-target/test-results')
+        }
+    }
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    options.encoding = 'UTF-8'
+    options.debugOptions.debugLevel = 'source,lines,vars'
+}
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    options.encoding = 'UTF-8'
+    options.debugOptions.debugLevel = 'source,lines,vars'
+}
